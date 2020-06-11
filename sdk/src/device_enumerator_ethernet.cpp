@@ -30,15 +30,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "device_enumerator_ethernet.h"
-#include "network.h"
-
 #include <glog/logging.h>
+
+#ifdef HAS_NETWORK
+#include "network.h"
+#endif
 
 DeviceEnumeratorEthernet::DeviceEnumeratorEthernet(const std::string &ip)
     : m_ip(ip) {}
 
 DeviceEnumeratorEthernet::~DeviceEnumeratorEthernet() = default;
 
+#ifdef HAS_NETWORK
 aditof::Status DeviceEnumeratorEthernet::findDevices(
     std::vector<aditof::DeviceConstructionData> &devices) {
     using namespace aditof;
@@ -86,3 +89,12 @@ aditof::Status DeviceEnumeratorEthernet::findDevices(
 
     return status;
 }
+#else
+aditof::Status DeviceEnumeratorEthernet::findDevices(
+    std::vector<aditof::DeviceConstructionData> &devices) {
+    using namespace aditof;
+    LOG(ERROR) << "Network interface is not enabled. Please rebuild the SDK "
+                  "with the option WITH_NETWORK=on";
+    return Status::GENERIC_ERROR;
+}
+#endif

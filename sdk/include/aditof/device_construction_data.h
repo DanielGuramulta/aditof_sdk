@@ -44,9 +44,11 @@ namespace aditof {
  * @brief Provides the types of sensor assosiated with the device
  */
 enum class DeviceType {
-    LOCAL,    //!< on the target
-    USB,      //!< connects to target via USB
+    LOCAL, //!< on the target
+    USB,   //!< connects to target via USB
+#ifdef HAS_NETWORK
     ETHERNET, //!< connects to target via Ethernet
+#endif
 };
 
 /**
