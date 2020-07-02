@@ -32,7 +32,10 @@ build_dragonboard() {
 }
 
 build_raspberrypi3() {
+    echo_green "############Running build for the 96tof1 camera!"
     run_docker ${DOCKER} /aditof_sdk/ci/travis/inside_docker.sh -DRASPBERRYPI=TRUE
+    echo_green "############Running build for the chicony-006 camera!"
+    run_docker ${DOCKER} /aditof_sdk/ci/travis/inside_docker.sh "-DRASPBERRYPI=TRUE -DUSE_CHICONY=TRUE"
 }
 
 build_ros(){

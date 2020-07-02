@@ -11,6 +11,7 @@
 #include <time.h>
 #include <string.h>
 #include <iostream>
+#include <math.h>
 
 #include <glog/logging.h>
 

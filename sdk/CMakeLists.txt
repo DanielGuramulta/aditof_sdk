@@ -46,8 +46,17 @@ if (NOT APPLE AND NOT WIN32)
 endif()
 
 if ( USE_CHICONY AND RASPBERRYPI )
-	set(CHICONY_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/cameras/chicony-006/*.cpp)
-	set(CHICONY_H ${CMAKE_CURRENT_SOURCE_DIR}/src/cameras/chicony-006/*.h)
+    set(CHICONY_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/cameras/chicony-006/*.cpp)
+    set(CHICONY_H ${CMAKE_CURRENT_SOURCE_DIR}/src/cameras/chicony-006/*.h)
+
+    add_library(chicony_eeprom SHARED IMPORTED)
+    set_target_properties(chicony_eeprom PROPERTIES IMPORTED_LOCATION "/home/daniel/workspace/github/danielguramulta/aditof_sdk/misc/chicony/libChicony_EEPROM.so")
+    # The library for the chicony_eeprom has no soname field embedded in it.
+    # Set IMPORTED_NO_SONAME such that cmake will adjust generated link commands to use the path
+    # to this library instead of its name
+    set_target_properties(chicony_eeprom PROPERTIES IMPORTED_NO_SONAME 1)
+
+    set(CHICONY_LIB chicony_eeprom)
 endif()
 
 # Platform specific sources and headers
@@ -120,6 +129,7 @@ if ( WITH_NETWORK )
         PUBLIC
             glog::glog
         PRIVATE
+            ${CHICONY_LIB}
             ${Protobuf_LIBRARIES}
             ${LIBWEBSOCKETS_LIBRARIES}
     )
@@ -127,6 +137,8 @@ else()
     target_link_libraries( ${PROJECT_NAME}
         PUBLIC
             glog::glog
+        PRIVATE
+            ${CHICONY_LIB}
     )
 endif()
 
